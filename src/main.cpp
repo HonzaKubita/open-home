@@ -11,10 +11,12 @@ WiFiServer server(80);
 String header;
 
 // Varaible to store switch pin
-const int switchPin = 5;
+const int switch0Pin = 5;
+const int switch1Pin = 4;
 
 // Variable to store pin value (HIGH/LOW) = (true/false)
-bool switchOn = false;
+bool switch0On = false;
+bool switch1On = false;
 
 // Current time
 unsigned long currentTime = millis();
@@ -27,10 +29,12 @@ void setup() {
   // Begin serial communication
   Serial.begin(9600);
   // Initialize the output variables as outputs
-  pinMode(switchPin, OUTPUT);
+  pinMode(switch0Pin, OUTPUT);
+  pinMode(switch1Pin, OUTPUT);
 
   // Set switchPin to LOW
-  digitalWrite(switchPin, LOW);
+  digitalWrite(switch0Pin, LOW);
+  digitalWrite(switch1Pin, LOW);
 
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Connecting to ");
@@ -74,14 +78,26 @@ void loop() {
             client.println();
             
             // turns the GPIOs on and off
-            if (header.indexOf("GET /switch") >= 0) {
-              Serial.println("Switching switch");
-              if (switchOn) {
-                digitalWrite(switchPin, LOW);
-                switchOn = false;
+            if (header.indexOf("GET /switch/0") >= 0) {
+              Serial.println("Switching switch 0");
+              if (switch0On) {
+                digitalWrite(switch0Pin, LOW);
+                switch0On = false;
               } else {
-                digitalWrite(switchPin, HIGH);
-                switchOn = true;
+                digitalWrite(switch0Pin, HIGH);
+                switch0On = true;
+              }
+            }
+
+            // turns the GPIOs on and off
+            if (header.indexOf("GET /switch/1") >= 0) {
+              Serial.println("Switching switch 1");
+              if (switch1On) {
+                digitalWrite(switch1Pin, LOW);
+                switch1On = false;
+              } else {
+                digitalWrite(switch1Pin, HIGH);
+                switch1On = true;
               }
             }
             
